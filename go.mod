@@ -1,3 +1,3 @@
-module goextension/core
+module goextension/mapper
 
 go 1.21.1

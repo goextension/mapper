@@ -1,12 +1,12 @@
 package mapper
 
-import . "goextension/core/contacts/mapper"
+import "goextension/mapper/contacts"
 
 type Mapper[K string | int, V any] struct {
 	maps map[K]V
 }
 
-func (mapper *Mapper[K, V]) SetMap(haystack K, needle V) Mappable[K, V] {
+func (mapper *Mapper[K, V]) SetMap(haystack K, needle V) contacts.Mappable[K, V] {
 
 	mapper.maps[haystack] = needle
 

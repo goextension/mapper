@@ -1,6 +1,4 @@
-package mapper
-
-import "goextension/core/contacts"
+package contacts
 
 type Mappable[K string | int, V any] interface {
 	Has(haystack K) bool
@@ -15,5 +13,5 @@ type Mappable[K string | int, V any] interface {
 
 	Values() []V
 
-	contacts.Clearable
+	Clearable
 }
