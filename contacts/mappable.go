@@ -1,17 +1,17 @@
 package contacts
 
-type Mappable[K string | int] interface {
-	HasKey(haystack K) bool
+type Mappable[K string | int, V any] interface {
+	Has(haystack K) bool
 
-	SetMap(haystack K, needle any) Mappable[K]
+	SetMap(haystack K, needle V) Mappable[K, V]
 
-	Get(haystack K) any
+	Get(haystack K) V
 
-	Delete(haystack K)
+	Unset(haystack K)
 
 	Keys() []K
 
-	Values() []any
+	Values() []V
 
 	Clearable
 }
