@@ -45,22 +45,22 @@ func (mapper *Mapper[K, V]) Has(haystack K) bool {
 
 func (mapper *Mapper[K, V]) Keys() []K {
 
-	keys := make([]K, len(mapper.maps))
+	carry := make([]K, 0, len(mapper.maps))
 
-	for key, _ := range mapper.maps {
-		keys = append(keys, key)
-	}
+	mapper.Each(func(value V, key K) {
+		carry = append(carry, key)
+	})
 
-	return keys
+	return carry
 }
 
 func (mapper *Mapper[K, V]) Values() []V {
 
-	values := make([]V, len(mapper.maps))
+	values := make([]V, 0, len(mapper.maps))
 
-	for _, value := range mapper.maps {
+	mapper.Each(func(value V, key K) {
 		values = append(values, value)
-	}
+	})
 
 	return values
 }
