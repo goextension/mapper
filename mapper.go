@@ -13,6 +13,17 @@ func (mapper *Mapper[K, V]) SetMap(haystack K, needle V) contacts.Mappable[K, V]
 	return mapper
 }
 
+func (mapper *Mapper[K, V]) Equal(haystack K, closure func(value V) bool) bool {
+
+	value, exists := mapper.maps[haystack]
+
+	if !exists {
+		return false
+	}
+
+	return closure(value)
+}
+
 func (mapper *Mapper[K, V]) Get(haystack K) V {
 	return mapper.maps[haystack]
 }
@@ -90,4 +101,11 @@ func (mapper *Mapper[K, V]) Each(closure func(value V, key K)) {
 
 func (mapper *Mapper[K, V]) Flush() {
 	mapper.maps = make(map[K]V)
+}
+
+func main() {
+
+	var m contacts.Mappable[string, int]
+
+	m.IsEmpty()
 }
