@@ -62,6 +62,32 @@ func (mapper *Mapper[K, V]) IsNotEmpty() bool {
 	return len(mapper.maps) > 0
 }
 
+func (mapper *Mapper[K, V]) Filter(closure func(value V, key K) bool) contacts.Mappable[K, V] {
+
+	mapper.Each(func(value V, key K) {
+		if closure(value, key) {
+			mapper.Unset(key)
+		}
+	})
+
+	return mapper
+}
+
+func (mapper *Mapper[K, V]) Map(closure func(value V, key K) V) contacts.Mappable[K, V] {
+
+	mapper.Each(func(value V, key K) {
+		mapper.SetMap(key, closure(value, key))
+	})
+
+	return mapper
+}
+
+func (mapper *Mapper[K, V]) Each(closure func(value V, key K)) {
+	for key, value := range mapper.maps {
+		closure(value, key)
+	}
+}
+
 func (mapper *Mapper[K, V]) Flush() {
 	mapper.maps = make(map[K]V)
 }
