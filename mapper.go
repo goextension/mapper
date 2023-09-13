@@ -84,10 +84,10 @@ func (mapper *Mapper[K, V]) Filter(closure func(value V, key K) bool) contacts.M
 	return mapper
 }
 
-func (mapper *Mapper[K, V]) Map(closure func(value V, key K) V) contacts.Mappable[K, V] {
+func (mapper *Mapper[K, V]) Map(closure func(value V, key K, mappable contacts.Mappable[K, V])) contacts.Mappable[K, V] {
 
 	mapper.Each(func(value V, key K) {
-		mapper.SetMap(key, closure(value, key))
+		closure(value, key, mapper)
 	})
 
 	return mapper
