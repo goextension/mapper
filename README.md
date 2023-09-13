@@ -1,5 +1,11 @@
 # Mapper
+
 > Mapper based on Laravel-style encapsulation
+
+#### install
+```shell
+go get -u github.com/goextension/mapper
+```
 
 #### install
 ```go
