@@ -1,6 +1,6 @@
 package mapper
 
-import "goextension/mapper/contacts"
+import "github.com/goextension/mapper/contacts"
 
 type Mapper[K string | int, V any] struct {
 	maps map[K]V

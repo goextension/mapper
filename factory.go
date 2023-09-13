@@ -1,6 +1,6 @@
 package mapper
 
-import "goextension/mapper/contacts"
+import "github.com/goextension/mapper/contacts"
 
 // MakeMapper Get Mappable instance.
 func MakeMapper[K string | int, V any]() contacts.Mappable[K, V] {

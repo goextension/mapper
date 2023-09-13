@@ -1,5 +1,7 @@
 package contacts
 
+import "github.com/goextension/contacts/flush"
+
 type Mappable[K string | int, V any] interface {
 	Has(haystack K) bool
 
@@ -17,7 +19,7 @@ type Mappable[K string | int, V any] interface {
 
 	Enumerable[K, V]
 
-	Nullable
+	flush.Nullable
 
-	Clearable
+	flush.Flusher
 }
