@@ -102,10 +102,3 @@ func (mapper *Mapper[K, V]) Each(closure func(value V, key K)) {
 func (mapper *Mapper[K, V]) Flush() {
 	mapper.maps = make(map[K]V)
 }
-
-func main() {
-
-	var m contacts.Mappable[string, int]
-
-	m.IsEmpty()
-}
