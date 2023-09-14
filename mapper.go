@@ -56,13 +56,13 @@ func (mapper *Mapper[K, V]) Keys() []K {
 
 func (mapper *Mapper[K, V]) Values() []V {
 
-	values := make([]V, 0, len(mapper.maps))
+	carry := make([]V, 0, len(mapper.maps))
 
 	mapper.Each(func(value V, key K) {
-		values = append(values, value)
+		carry = append(carry, value)
 	})
 
-	return values
+	return carry
 }
 
 func (mapper *Mapper[K, V]) IsEmpty() bool {
