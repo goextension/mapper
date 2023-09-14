@@ -1,4 +1,4 @@
-package mapper
+package maps
 
 import "github.com/goextension/mapper/contacts"
 
@@ -33,7 +33,6 @@ func (mapper *Mapper[K, V]) Unset(haystack K) {
 	if mapper.Has(haystack) {
 		delete(mapper.maps, haystack)
 	}
-
 }
 
 func (mapper *Mapper[K, V]) Has(haystack K) bool {
@@ -45,7 +44,7 @@ func (mapper *Mapper[K, V]) Has(haystack K) bool {
 
 func (mapper *Mapper[K, V]) Keys() []K {
 
-	carry := make([]K, 0, len(mapper.maps))
+	carry := make([]K, 0, mapper.Count())
 
 	mapper.Each(func(value V, key K) {
 		carry = append(carry, key)
@@ -56,7 +55,7 @@ func (mapper *Mapper[K, V]) Keys() []K {
 
 func (mapper *Mapper[K, V]) Values() []V {
 
-	carry := make([]V, 0, len(mapper.maps))
+	carry := make([]V, 0, mapper.Count())
 
 	mapper.Each(func(value V, key K) {
 		carry = append(carry, value)
@@ -97,6 +96,10 @@ func (mapper *Mapper[K, V]) Each(closure func(value V, key K)) {
 	for key, value := range mapper.maps {
 		closure(value, key)
 	}
+}
+
+func (mapper *Mapper[K, V]) Count() int {
+	return len(mapper.maps)
 }
 
 func (mapper *Mapper[K, V]) Flush() {
