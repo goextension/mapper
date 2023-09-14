@@ -4,12 +4,7 @@
 
 #### install
 ```shell
-go get -u github.com/goextension/mapper
-```
-
-#### install
-```go
-go get -u github.com/goextension/mapper
+go get -u github.com/goextension/mapper@version
 ```
 
 #### make mapper
@@ -17,7 +12,7 @@ go get -u github.com/goextension/mapper
 import (
 	 mapper2 `github.com/goextension/mapper`
 	`github.com/goextension/mapper/contacts`
-)
+    )
 
 // make instance a
 var a contacts.Mappable[string, string]
