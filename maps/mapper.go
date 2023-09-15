@@ -4,9 +4,11 @@ import "github.com/goextension/mapper/contacts"
 
 type Mapper[K string | int, V any] struct {
 	maps map[K]V
+
+	sortable contacts.Sorter[K, V]
 }
 
-func (mapper *Mapper[K, V]) SetMap(haystack K, needle V) contacts.Mappable[K, V] {
+func (mapper *Mapper[K, V]) Store(haystack K, needle V) contacts.Mappable[K, V] {
 
 	mapper.maps[haystack] = needle
 
@@ -22,6 +24,15 @@ func (mapper *Mapper[K, V]) Equal(haystack K, closure func(value V) bool) bool {
 	}
 
 	return closure(value)
+}
+
+func (mapper *Mapper[K, V]) DeleteWithCopy(haystack K) V {
+
+	value := mapper.Get(haystack)
+
+	mapper.Unset(haystack)
+
+	return value
 }
 
 func (mapper *Mapper[K, V]) Get(haystack K) V {
@@ -46,6 +57,14 @@ func (mapper *Mapper[K, V]) Keys() []K {
 
 	carry := make([]K, 0, mapper.Count())
 
+	if mapper.sortable.IsSorted() {
+		mapper.sortable.Each(func(key K) {
+			carry = append(carry, key)
+		})
+
+		return carry
+	}
+
 	mapper.Each(func(value V, key K) {
 		carry = append(carry, key)
 	})
@@ -56,6 +75,15 @@ func (mapper *Mapper[K, V]) Keys() []K {
 func (mapper *Mapper[K, V]) Values() []V {
 
 	carry := make([]V, 0, mapper.Count())
+
+	if mapper.sortable.IsSorted() {
+
+		mapper.sortable.Each(func(key K) {
+			carry = append(carry, mapper.Get(key))
+		})
+
+		return carry
+	}
 
 	mapper.Each(func(value V, key K) {
 		carry = append(carry, value)
@@ -96,6 +124,14 @@ func (mapper *Mapper[K, V]) Each(closure func(value V, key K)) {
 	for key, value := range mapper.maps {
 		closure(value, key)
 	}
+}
+
+func (mapper *Mapper[K, V]) SortBy() contacts.Mappable[K, V] {
+	return mapper.sortable.SetMappable(mapper).SortBy()
+}
+
+func (mapper *Mapper[K, V]) SortByDesc() contacts.Mappable[K, V] {
+	return mapper.sortable.SetMappable(mapper).SortByDesc()
 }
 
 func (mapper *Mapper[K, V]) Count() int {

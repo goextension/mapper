@@ -5,7 +5,7 @@ import "github.com/goextension/contacts/collection"
 type Mappable[K string | int, V any] interface {
 	Has(haystack K) bool
 
-	SetMap(haystack K, needle V) Mappable[K, V]
+	Store(haystack K, needle V) Mappable[K, V]
 
 	Equal(haystack K, closure func(value V) bool) bool
 
@@ -13,11 +13,15 @@ type Mappable[K string | int, V any] interface {
 
 	Unset(haystack K)
 
+	DeleteWithCopy(haystack K) V
+
 	Keys() []K
 
 	Values() []V
 
 	Enumerable[K, V]
+
+	Sortable[K, V]
 
 	collection.Nullable
 
