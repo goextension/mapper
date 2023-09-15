@@ -53,6 +53,11 @@ func (sorter *MapSorter[K, V]) sortSync() contacts.Mappable[K, V] {
 		return sorter.mappable
 	}
 
+	if !slices.Equal(sorter.caches, sorter.mappable.Keys()) {
+
+		// 如果缓存与mappable不同，则重新赋值去重
+	}
+
 	sorter.store(sorter.getSortValues())
 
 	return sorter.mappable
