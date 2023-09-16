@@ -14,13 +14,13 @@ type MapSorter[K string | int, V any] struct {
 
 func (sorter *MapSorter[K, V]) GetSortValues() []K {
 
-	if !sorter.observer.HasEvent() {
+	if !sorter.observer.IsTrigger() {
 		return sorter.mappable.Keys()
 	}
 
 	values := sorter.mappable.Keys()
 
-	if sorter.observer.Is("desc") {
+	if sorter.observer.HasEvent("desc") {
 		slices.Reverse(values)
 		return values
 	}

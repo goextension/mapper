@@ -16,10 +16,10 @@ func (observer *SortEventObserver) FireEvent(event string) {
 	}
 }
 
-func (observer *SortEventObserver) Is(event string) bool {
+func (observer *SortEventObserver) HasEvent(event string) bool {
 	return strings.EqualFold(observer.event, event)
 }
 
-func (observer *SortEventObserver) HasEvent() bool {
+func (observer *SortEventObserver) IsTrigger() bool {
 	return observer.sorted
 }
