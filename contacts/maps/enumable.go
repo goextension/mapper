@@ -1,4 +1,4 @@
-package contacts
+package maps
 
 type Enumerable[K string | int, V any] interface {
 	Filter(closure func(value V, key K) bool) Mappable[K, V]

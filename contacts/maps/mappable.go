@@ -1,6 +1,9 @@
-package contacts
+package maps
 
-import "github.com/goextension/contacts/collection"
+import (
+	"github.com/goextension/contacts/collection"
+	"github.com/goextension/mapper/contacts/sort"
+)
 
 type Mappable[K string | int, V any] interface {
 	Has(haystack K) bool
@@ -21,7 +24,7 @@ type Mappable[K string | int, V any] interface {
 
 	Enumerable[K, V]
 
-	Sortable[K, V]
+	sort.Sortable[K, V]
 
 	collection.Nullable
 

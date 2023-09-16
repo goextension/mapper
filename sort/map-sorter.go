@@ -1,103 +1,53 @@
 package sort
 
 import (
-	"github.com/goextension/mapper/contacts"
+	"github.com/goextension/mapper/contacts/maps"
+	"github.com/goextension/mapper/contacts/observer"
+	"github.com/goextension/mapper/contacts/sort"
 	"slices"
-	"strings"
 )
 
 type MapSorter[K string | int, V any] struct {
-	caches []K
-
-	sorted bool
-
-	mappable contacts.Mappable[K, V]
-
-	trigger string
+	observer observer.Observer
+	mappable maps.Mappable[K, V]
 }
 
-func (sorter *MapSorter[K, V]) Each(closure func(key K)) {
-	for _, key := range sorter.caches {
-		closure(key)
-	}
-}
+func (sorter *MapSorter[K, V]) GetSortValues() []K {
 
-func (sorter *MapSorter[K, V]) SortBy() contacts.Mappable[K, V] {
-
-	sorter.fireEvent("asc")
-
-	return sorter.sortSync()
-}
-
-func (sorter *MapSorter[K, V]) SortByDesc() contacts.Mappable[K, V] {
-
-	sorter.fireEvent("desc")
-
-	return sorter.sortSync()
-}
-
-func (sorter *MapSorter[K, V]) fireEvent(trigger string) {
-	sorter.trigger = trigger
-}
-
-func (sorter *MapSorter[K, V]) sortSync() contacts.Mappable[K, V] {
-
-	if !sorter.IsSorted() {
-
-		sorter.caches = make([]K, 0, sorter.mappable.Count())
-
-		sorter.store(sorter.getSortValues())
-
-		sorter.sorted = true
-
-		return sorter.mappable
+	if !sorter.observer.HasEvent() {
+		return sorter.mappable.Keys()
 	}
 
-	if !slices.Equal(sorter.caches, sorter.mappable.Keys()) {
+	values := sorter.mappable.Keys()
 
-		// 如果缓存与mappable不同，则重新赋值去重
+	if sorter.observer.Is("desc") {
+		slices.Reverse(values)
+		return values
 	}
 
-	sorter.store(sorter.getSortValues())
+	slices.Sort(values)
+	return values
+}
+
+func (sorter *MapSorter[K, V]) SortBy() maps.Mappable[K, V] {
+
+	sorter.observer.FireEvent("asc")
 
 	return sorter.mappable
-
 }
 
-func (sorter *MapSorter[K, V]) getSortValues() []K {
+func (sorter *MapSorter[K, V]) SortByDesc() maps.Mappable[K, V] {
 
-	sortValues := sorter.mappable.Keys()
+	sorter.observer.FireEvent("desc")
 
-	if sorter.isDesc() {
-		slices.Reverse(sortValues)
-
-		return sortValues
-	}
-
-	slices.Sort(sortValues)
-
-	return sortValues
+	return sorter.mappable
 }
 
-func (sorter *MapSorter[K, V]) isDesc() bool {
-	return strings.EqualFold(sorter.trigger, "desc")
-}
-
-func (sorter *MapSorter[K, V]) store(values []K) {
-	for _, key := range values {
-		sorter.caches = append(sorter.caches, key)
-	}
-}
-
-func (sorter *MapSorter[K, V]) SetMappable(mappable contacts.Mappable[K, V]) contacts.Sortable[K, V] {
+func (sorter *MapSorter[K, V]) SetMappable(mappable maps.Mappable[K, V]) sort.Sortable[K, V] {
 
 	if sorter.mappable == nil {
 		sorter.mappable = mappable
 	}
 
 	return sorter
-}
-
-func (sorter *MapSorter[K, V]) IsSorted() bool {
-	return sorter.sorted
 }
