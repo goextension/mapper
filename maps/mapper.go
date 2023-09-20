@@ -3,17 +3,24 @@ package maps
 import (
 	"github.com/goextension/mapper/contacts/maps"
 	"github.com/goextension/mapper/contacts/sort"
+	"sync"
 )
 
 type Mapper[K string | int, V any] struct {
 	maps map[K]V
 
 	sortable sort.Sorter[K, V]
+
+	mutex sync.RWMutex
 }
 
 func (mapper *Mapper[K, V]) Store(haystack K, needle V) maps.Mappable[K, V] {
 
+	mapper.mutex.Lock()
+
 	mapper.maps[haystack] = needle
+
+	mapper.mutex.Unlock()
 
 	return mapper
 }
@@ -39,6 +46,11 @@ func (mapper *Mapper[K, V]) DeleteWithCopy(haystack K) V {
 }
 
 func (mapper *Mapper[K, V]) Get(haystack K) V {
+
+	mapper.mutex.RLock()
+
+	defer mapper.mutex.RUnlock()
+
 	return mapper.maps[haystack]
 }
 
@@ -76,7 +88,7 @@ func (mapper *Mapper[K, V]) IsEmpty() bool {
 }
 
 func (mapper *Mapper[K, V]) IsNotEmpty() bool {
-	return len(mapper.maps) > 0
+	return mapper.Count() > 0
 }
 
 func (mapper *Mapper[K, V]) Filter(closure func(value V, key K) bool) maps.Mappable[K, V] {
