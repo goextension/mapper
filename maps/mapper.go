@@ -112,9 +112,14 @@ func (mapper *Mapper[K, V]) Map(closure func(value V, key K, maps map[K]V)) maps
 }
 
 func (mapper *Mapper[K, V]) Each(closure func(value V, key K)) {
+
+	mapper.mutex.RLock()
+
 	for key, value := range mapper.maps {
 		closure(value, key)
 	}
+
+	mapper.mutex.RUnlock()
 }
 
 func (mapper *Mapper[K, V]) SortBy() maps.Mappable[K, V] {
