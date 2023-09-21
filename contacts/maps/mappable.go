@@ -5,7 +5,7 @@ import (
 	"github.com/goextension/mapper/contacts/sort"
 )
 
-type Mappable[K string | int, V any] interface {
+type Mappable[K Argument, V any] interface {
 	Has(haystack K) bool
 
 	Store(haystack K, needle V) Mappable[K, V]

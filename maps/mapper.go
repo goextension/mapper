@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-type Mapper[K string | int, V any] struct {
+type Mapper[K maps.Argument, V any] struct {
 	maps map[K]V
 
 	sortable sort.Sorter[K, V]
