@@ -63,7 +63,11 @@ func (mapper *Mapper[K, V]) Unset(haystack K) {
 
 func (mapper *Mapper[K, V]) Has(haystack K) bool {
 
+	mapper.mutex.RLock()
+
 	_, exists := mapper.maps[haystack]
+
+	mapper.mutex.RUnlock()
 
 	return exists
 }
